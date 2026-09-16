@@ -1,53 +1,40 @@
-# Deployment behind the global Nginx
+# Self-contained deployment
 
-This project runs three application services: an Nginx container that serves the
-Vite build, the Express API, and PostgreSQL. Neither the frontend nor the API
-publishes a host port. They join the external Docker network used by the global
-Nginx, which routes the application's domain to each service:
+This project is self-contained: one `docker compose` command starts the Nginx
+frontend, Express API, PostgreSQL, and the one-off Prisma migration service.
+Only the frontend publishes a host port (`3000`). Its Nginx proxies `/api/*` to
+the API on Docker's internal network, so the browser uses one origin and does
+not require production CORS configuration.
 
 ```text
-optica.internal.example
+http://localhost:3000
         │
         ▼
-   Global Nginx
-     ├─ /       → optica-web:80
-     └─ /api/*  → optica-api:3000
+   Frontend Nginx
+     ├─ /       → React build
+     └─ /api/*  → Express API → PostgreSQL
 ```
-
-The browser calls `/api`, so frontend and API remain on the same origin and do
-not require production CORS configuration.
 
 ## First deployment
 
-1. Create the external network once. The global Nginx container must be joined
-   to this same network.
-
-   ```sh
-   docker network create internal-proxy
-   ```
-
-2. Create the production environment file without committing it:
+1. Create the production environment file without committing it:
 
    ```sh
    cp .env.production.example .env.production
    ```
 
    Set a long unique database password. If the password has URL-reserved
-   characters, URL-encode it in `DATABASE_URL`. Keep `PROXY_NETWORK` equal to
-   the shared Docker network name.
+   characters, URL-encode it in `DATABASE_URL`.
 
-3. Start the stack:
+2. Start the stack:
 
    ```sh
    docker compose --env-file .env.production up -d --build
    ```
 
-   Compose waits for PostgreSQL, runs `prisma migrate deploy` in the `migrate`
-   service, then starts the API and frontend.
-
-4. Add [the Optica virtual host](../deploy/nginx/optica.global.conf) to the
-   global Nginx configuration, replace `optica.internal.example` with the real
-   internal domain, and reload that Nginx instance.
+   Compose automatically creates the internal network, waits for PostgreSQL,
+   runs `prisma migrate deploy` in the `migrate` service, then starts the API
+   and frontend. Open `http://localhost:3000`.
 
 ## Updates
 
@@ -74,4 +61,4 @@ migrations.
 Continue using the existing Vite and API development commands. Without an
 explicit `VITE_API_URL`, the development frontend calls
 `http://localhost:3000`. The production build omits this variable, so the
-browser calls `/api` and the global Nginx routes that request to the API.
+browser calls `/api` and the frontend Nginx routes that request to the API.
