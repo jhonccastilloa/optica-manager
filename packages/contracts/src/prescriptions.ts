@@ -38,6 +38,10 @@ export const personalizationTypeSchema = z.enum([
 
 export const frameTypeSchema = z.enum(["FULL_RIM", "SEMI_RIMLESS", "RIMLESS"])
 
+const prescriptionPatientIdSchema = z.uuid(
+  "Selecciona un paciente para continuar.",
+)
+
 export const prismSchema = z.object({
   value: nullableDecimalSchema,
   base: z.preprocess(
@@ -105,7 +109,7 @@ export const personalizationSchema = z.object({
 })
 
 export const prescriptionCreateSchema = z.object({
-  patientId: patientIdSchema,
+  patientId: prescriptionPatientIdSchema,
   prescriptionDate: z.iso.date(),
   far: visionMeasurementsSchema,
   near: visionMeasurementsSchema,
