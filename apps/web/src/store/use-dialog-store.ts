@@ -6,39 +6,34 @@ import {
   type CloseGuard,
 } from "@/lib/close-guard"
 
-export type DrawerSide = "left" | "right" | "top" | "bottom"
-
-export type DrawerOptions = {
+export type DialogOptions = {
   title?: ReactNode
   description?: ReactNode
   content: ReactNode
-  side?: DrawerSide
-  width?: string
-  height?: string
   className?: string
   dismissible?: boolean
-  showSwipeHandle?: boolean
+  showCloseButton?: boolean
 }
 
-type DrawerState = {
+type DialogState = {
   isOpen: boolean
-  options: DrawerOptions | null
+  options: DialogOptions | null
   closeGuard: CloseGuard
-  openDrawer: (options: DrawerOptions) => boolean
-  closeDrawer: () => boolean
-  forceCloseDrawer: () => void
+  openDialog: (options: DialogOptions) => boolean
+  closeDialog: () => boolean
+  forceCloseDialog: () => void
   setCloseGuard: (isBlocked: boolean, message?: string) => void
-  clearDrawer: () => void
+  clearDialog: () => void
 }
 
-export const useDrawerStore = create<DrawerState>((set, get) => ({
+export const useDialogStore = create<DialogState>((set, get) => ({
   isOpen: false,
   options: null,
   closeGuard: {
     isBlocked: false,
     message: defaultCloseGuardMessage,
   },
-  openDrawer: (options) => {
+  openDialog: (options) => {
     if (get().isOpen && get().closeGuard.isBlocked) {
       return false
     }
@@ -53,7 +48,7 @@ export const useDrawerStore = create<DrawerState>((set, get) => ({
     })
     return true
   },
-  closeDrawer: () => {
+  closeDialog: () => {
     if (get().closeGuard.isBlocked) {
       return false
     }
@@ -61,10 +56,10 @@ export const useDrawerStore = create<DrawerState>((set, get) => ({
     set({ isOpen: false })
     return true
   },
-  forceCloseDrawer: () => set({ isOpen: false }),
+  forceCloseDialog: () => set({ isOpen: false }),
   setCloseGuard: (isBlocked, message = defaultCloseGuardMessage) =>
     set({ closeGuard: { isBlocked, message } }),
-  clearDrawer: () =>
+  clearDialog: () =>
     set({
       options: null,
       closeGuard: {

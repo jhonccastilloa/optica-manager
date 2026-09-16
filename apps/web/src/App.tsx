@@ -1,5 +1,6 @@
 import { RouterProvider } from "react-router/dom"
 import { ThemeProvider } from "@/components/theme-provider"
+import { GlobalDialog } from "@/components/global-dialog"
 import { GlobalDrawer } from "@/components/global-drawer"
 import { GlobalLoader } from "@/components/global-loader"
 import { Toaster } from "@/components/ui/toast"
@@ -10,10 +11,11 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="optica-manager-theme">
       <QueryProvider>
-          <RouterProvider router={router} />
-          <Toaster />
-          <GlobalDrawer />
-          <GlobalLoader />
+        <RouterProvider router={router} />
+        <Toaster />
+        <GlobalDialog />
+        <GlobalDrawer />
+        <GlobalLoader />
       </QueryProvider>
     </ThemeProvider>
   )

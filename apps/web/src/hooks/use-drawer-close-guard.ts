@@ -1,21 +1,12 @@
-import { useEffect } from "react"
-
+import { useCloseGuard } from "@/hooks/use-close-guard"
+import { defaultCloseGuardMessage } from "@/lib/close-guard"
 import { useDrawerStore } from "@/store/use-drawer-store"
-
-const defaultCloseMessage =
-  "La operación está en curso. Espera a que termine para cerrar."
 
 export function useDrawerCloseGuard(
   isBlocked: boolean,
-  message = defaultCloseMessage,
+  message = defaultCloseGuardMessage,
 ) {
   const setCloseGuard = useDrawerStore((state) => state.setCloseGuard)
 
-  useEffect(() => {
-    setCloseGuard(isBlocked, message)
-
-    return () => {
-      setCloseGuard(false)
-    }
-  }, [isBlocked, message, setCloseGuard])
+  useCloseGuard(setCloseGuard, isBlocked, message)
 }
