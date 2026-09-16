@@ -1,4 +1,5 @@
 import winston from "winston";
+import { ENV } from "../config/env";
 
 const logFormat = winston.format.printf(({ level, message, timestamp }) => {
   return `${timestamp} [${level}]: ${message}`;
@@ -15,23 +16,26 @@ export const logger = winston.createLogger({
       ),
     }),
 
-    new winston.transports.File({
-      filename: "logs/error.log",
-      level: "error",
-      format: winston.format.combine(
-        winston.format.uncolorize(),
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        logFormat
-      ),
-    }),
-
-    new winston.transports.File({
-      filename: "logs/combined.log",
-      format: winston.format.combine(
-        winston.format.uncolorize(),
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        logFormat
-      ),
-    }),
+    ...(ENV.NODE_ENV === "prod"
+      ? []
+      : [
+          new winston.transports.File({
+            filename: "logs/error.log",
+            level: "error",
+            format: winston.format.combine(
+              winston.format.uncolorize(),
+              winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+              logFormat,
+            ),
+          }),
+          new winston.transports.File({
+            filename: "logs/combined.log",
+            format: winston.format.combine(
+              winston.format.uncolorize(),
+              winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+              logFormat,
+            ),
+          }),
+        ]),
   ],
 });

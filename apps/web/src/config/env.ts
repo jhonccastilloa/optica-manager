@@ -1,11 +1,13 @@
 import { z } from "zod"
 
 const envSchema = z.object({
-  VITE_API_URL: z.string().trim().url().default("http://localhost:3000"),
+  VITE_API_URL: z.string().trim().url().optional(),
 })
 
 const parsedEnv = envSchema.safeParse({
-  VITE_API_URL: import.meta.env.VITE_API_URL,
+  VITE_API_URL:
+    import.meta.env.VITE_API_URL ??
+    (import.meta.env.DEV ? "http://localhost:3000" : undefined),
 })
 
 if (!parsedEnv.success) {
@@ -16,11 +18,11 @@ if (!parsedEnv.success) {
   )
 }
 
-const apiUrl = parsedEnv.data.VITE_API_URL.replace(/\/$/, "")
+const apiUrl = parsedEnv.data.VITE_API_URL?.replace(/\/$/, "")
 
 const ENV = {
   API_URL: apiUrl,
-  API_BASE_URL: `${apiUrl}/api`,
+  API_BASE_URL: apiUrl ? `${apiUrl}/api` : "/api",
   IS_DEV: import.meta.env.DEV,
   IS_PROD: import.meta.env.PROD,
 }
