@@ -6,9 +6,7 @@ services:
     image: optica-manager-frontend:latest
     restart: unless-stopped
     ports:
-      - target: 80
-        published: "4444"
-        host_ip: 127.0.0.1
+      - 4444:80
     depends_on:
       api:
         condition: service_healthy
