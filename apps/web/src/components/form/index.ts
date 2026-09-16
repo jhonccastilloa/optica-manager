@@ -1,4 +1,5 @@
 export { CheckboxField } from "@/components/form/checkbox-field"
+export { applyApiFieldErrors } from "@/components/form/form-error-utils"
 export { FormWrapper } from "@/components/form/form-wrapper"
 export { SelectField, type SelectOption } from "@/components/form/select-field"
 export { TextareaField } from "@/components/form/textarea-field"

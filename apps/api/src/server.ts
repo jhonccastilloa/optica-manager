@@ -11,6 +11,7 @@ import { ENV } from "./config/env";
 import expressWinston from "express-winston";
 import { logger } from "./utils/logger";
 import { globalErrorHandler } from "./middlewares/error.middleware";
+import { randomUUID } from "node:crypto";
 class Server {
   private app: Express;
   private PORT: number = ENV.PORT;
@@ -25,6 +26,13 @@ class Server {
 
   middlewares() {
     this.app.use(cors());
+    this.app.use((_req, res, next) => {
+      const requestId = randomUUID();
+
+      res.locals.requestId = requestId;
+      res.setHeader("x-request-id", requestId);
+      next();
+    });
     this.app.use(express.json());
     this.app.use(
       expressWinston.logger({

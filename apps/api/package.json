@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "pnpm --filter @optica/contracts build",
     "dev": "tsx watch src/app.ts",
+    "prebuild": "pnpm --filter @optica/contracts build",
     "build": "tsc",
+    "pretypecheck": "pnpm --filter @optica/contracts build",
     "start": "node dist/app.js",
     "typecheck": "tsc --noEmit"
   },
@@ -16,6 +19,7 @@
     "express": "^5.2.1",
     "express-winston": "^4.2.0",
     "pg": "^8.23.0",
+    "@optica/contracts": "workspace:*",
     "winston": "^3.19.0",
     "zod": "^4.6.4"
   },

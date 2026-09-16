@@ -1,7 +1,12 @@
 import axios from "axios"
+import { ERROR_CODES } from "@optica/contracts"
 import { toast } from "@/components/ui/toast"
 import ENV from "@/config/env"
-import { getApiErrorMessage, normalizeApiError } from "@/api/errors"
+import {
+  getApiErrorMessage,
+  isApiError,
+  normalizeApiError,
+} from "@/api/errors"
 import { useLoaderStore } from "@/store/use-loader-store"
 
 const api = axios.create({
@@ -16,11 +21,19 @@ const shouldTrackGlobalLoader = (
   config: { skipGlobalLoader?: boolean } | undefined,
 ) => config !== undefined && config.skipGlobalLoader !== true
 
-const shouldShowErrorToast = (error: unknown) => {
+const shouldShowErrorToast = (
+  error: unknown,
+  normalizedError: unknown,
+) => {
   if (axios.isCancel(error)) return false
   if (!axios.isAxiosError(error)) return true
 
-  return error.config?.skipErrorToast !== true
+  if (error.config?.skipErrorToast === true) return false
+
+  return !(
+    isApiError(normalizedError) &&
+    normalizedError.code === ERROR_CODES.VALIDATION_ERROR
+  )
 }
 
 api.interceptors.request.use(
@@ -61,7 +74,7 @@ api.interceptors.response.use(
 
     const normalizedError = normalizeApiError(error)
 
-    if (shouldShowErrorToast(error)) {
+    if (shouldShowErrorToast(error, normalizedError)) {
       toast.add({
         title: "Error",
         description: getApiErrorMessage(normalizedError),
