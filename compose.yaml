@@ -6,11 +6,14 @@ services:
     image: optica-manager-frontend:latest
     restart: unless-stopped
     ports:
-      - "3000:80"
+      - target: 80
+        published: "4444"
+        host_ip: 127.0.0.1
     depends_on:
       api:
         condition: service_healthy
     networks:
+      - public
       - internal
 
   api:
@@ -76,5 +79,11 @@ volumes:
   postgres_data:
 
 networks:
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.32.0.0/16
+
   internal:
     internal: true
