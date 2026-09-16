@@ -38,9 +38,9 @@ export const personalizationTypeSchema = z.enum([
 
 export const frameTypeSchema = z.enum(["FULL_RIM", "SEMI_RIMLESS", "RIMLESS"])
 
-const prescriptionPatientIdSchema = z.uuid(
-  "Selecciona un paciente para continuar.",
-)
+const prescriptionPatientIdSchema = z.uuid({
+  error: "Selecciona un paciente para continuar.",
+})
 
 export const prismSchema = z.object({
   value: nullableDecimalSchema,
