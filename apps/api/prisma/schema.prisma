@@ -11,3 +11,94 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum PrismBase {
+  IN
+  OUT
+  UP
+  DOWN
+}
+
+enum PersonalizationType {
+  SIGNATURE
+  EYEPRINT
+  FREE_EVOLUTION
+}
+
+enum FrameType {
+  FULL_RIM
+  SEMI_RIMLESS
+  RIMLESS
+}
+
+model Patient {
+  id            String         @id @default(uuid()) @db.Uuid
+  firstName     String         @db.VarChar(100)
+  lastName      String         @db.VarChar(100)
+  dni           String?        @unique @db.VarChar(8)
+  phone         String?        @db.VarChar(30)
+  address       String?        @db.Text
+  reference     String?        @db.Text
+  prescriptions Prescription[]
+  createdAt     DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(3)
+
+  @@index([lastName, firstName])
+  @@index([createdAt(sort: Desc)])
+}
+
+model Prescription {
+  id               String   @id @default(uuid()) @db.Uuid
+  number           Int      @unique @default(autoincrement())
+  patientId        String   @db.Uuid
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  prescriptionDate DateTime @db.Date
+
+  farOdSphere     Decimal?   @db.Decimal(5, 2)
+  farOdCylinder   Decimal?   @db.Decimal(5, 2)
+  farOdAxis       Int?       @db.SmallInt
+  farOdDnp        Decimal?   @db.Decimal(5, 2)
+  farOdHeight     Decimal?   @db.Decimal(5, 2)
+  farOdPrismValue Decimal?   @db.Decimal(5, 2)
+  farOdPrismBase  PrismBase?
+
+  farOiSphere     Decimal?   @db.Decimal(5, 2)
+  farOiCylinder   Decimal?   @db.Decimal(5, 2)
+  farOiAxis       Int?       @db.SmallInt
+  farOiDnp        Decimal?   @db.Decimal(5, 2)
+  farOiHeight     Decimal?   @db.Decimal(5, 2)
+  farOiPrismValue Decimal?   @db.Decimal(5, 2)
+  farOiPrismBase  PrismBase?
+
+  nearOdSphere     Decimal?   @db.Decimal(5, 2)
+  nearOdCylinder   Decimal?   @db.Decimal(5, 2)
+  nearOdAxis       Int?       @db.SmallInt
+  nearOdDnp        Decimal?   @db.Decimal(5, 2)
+  nearOdHeight     Decimal?   @db.Decimal(5, 2)
+  nearOdPrismValue Decimal?   @db.Decimal(5, 2)
+  nearOdPrismBase  PrismBase?
+
+  nearOiSphere     Decimal?   @db.Decimal(5, 2)
+  nearOiCylinder   Decimal?   @db.Decimal(5, 2)
+  nearOiAxis       Int?       @db.SmallInt
+  nearOiDnp        Decimal?   @db.Decimal(5, 2)
+  nearOiHeight     Decimal?   @db.Decimal(5, 2)
+  nearOiPrismValue Decimal?   @db.Decimal(5, 2)
+  nearOiPrismBase  PrismBase?
+
+  vertexDistance      Decimal?             @db.Decimal(5, 2)
+  pantoscopicAngle    Decimal?             @db.Decimal(5, 2)
+  panoramicAngle      Decimal?             @db.Decimal(5, 2)
+  personalizationType PersonalizationType?
+  frameType           FrameType?
+
+  ocularDiagnosis     String?  @db.Text
+  refractiveDiagnosis String?  @db.Text
+  treatment           String?  @db.Text
+  observations        String?  @db.Text
+  createdAt           DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([patientId, prescriptionDate(sort: Desc), number(sort: Desc)])
+  @@index([prescriptionDate(sort: Desc), number(sort: Desc)])
+}

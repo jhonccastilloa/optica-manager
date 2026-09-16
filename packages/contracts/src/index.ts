@@ -9,3 +9,52 @@ export {
   type ApiErrorResponse,
   type ErrorCode,
 } from "./errors"
+
+export {
+  createPaginatedResponseSchema,
+  paginationSchema,
+  type Pagination,
+} from "./pagination"
+
+export {
+  patientCreateSchema,
+  patientIdSchema,
+  patientListQuerySchema,
+  patientListResponseSchema,
+  patientSchema,
+  patientSummarySchema,
+  patientUpdateSchema,
+  type Patient,
+  type PatientCreateInput,
+  type PatientListQuery,
+  type PatientSummary,
+  type PatientUpdateInput,
+} from "./patients"
+
+export {
+  eyeMeasurementSchema,
+  frameTypeSchema,
+  personalizationSchema,
+  personalizationTypeSchema,
+  prescriptionCreateSchema,
+  prescriptionListItemSchema,
+  prescriptionListQuerySchema,
+  prescriptionListResponseSchema,
+  prescriptionSchema,
+  prescriptionUpdateSchema,
+  prismBaseSchema,
+  prismSchema,
+  visionMeasurementsSchema,
+  type EyeMeasurement,
+  type FrameType,
+  type Personalization,
+  type PersonalizationType,
+  type Prescription,
+  type PrescriptionCreateInput,
+  type PrescriptionListItem,
+  type PrescriptionListQuery,
+  type PrescriptionUpdateInput,
+  type Prism,
+  type PrismBase,
+  type VisionMeasurements,
+} from "./prescriptions"

@@ -8,11 +8,21 @@ import {
 
 const pageTitles: Record<string, string> = {
   "/": "Panel principal",
+  "/patients": "Pacientes",
+  "/prescriptions": "Recetas",
 }
 
 export function AppBreadcrumb() {
   const { pathname } = useLocation()
-  const title = pageTitles[pathname] ?? "Óptica Manager"
+  const title = pathname.startsWith("/patients/")
+    ? "Detalle de paciente"
+    : pathname === "/prescriptions/new"
+      ? "Nueva receta"
+      : pathname.endsWith("/edit")
+        ? "Editar receta"
+        : pathname.startsWith("/prescriptions/")
+          ? "Detalle de receta"
+          : pageTitles[pathname] ?? "Óptica Manager"
 
   return (
     <Breadcrumb>

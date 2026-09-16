@@ -39,6 +39,19 @@ export const formatDateUtc = (date?: ConfigType, separator: string = "/") => {
   return validDate.format(`DD${separator}MM${separator}YYYY`);
 };
 
+// Formats a calendar date (YYYY-MM-DD) without converting it between time zones.
+// Use this for PostgreSQL DATE columns such as a prescription date.
+export const formatDateOnly = (date?: string, separator: string = "/") => {
+  if (!date) return "";
+
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+
+  if (!match) return formatDateUtc(date, separator);
+
+  const [, year, month, day] = match;
+  return `${day}${separator}${month}${separator}${year}`;
+};
+
 export const formatDateDefault = (date?: ConfigType, format?: string) => {
   const validDate = transformValidDate(date);
   return validDate.format(format);

@@ -12,6 +12,8 @@ import expressWinston from "express-winston";
 import { logger } from "./utils/logger";
 import { globalErrorHandler } from "./middlewares/error.middleware";
 import { randomUUID } from "node:crypto";
+import patientRouter from "./modules/patients/patient.routes";
+import prescriptionRouter from "./modules/prescriptions/prescription.routes";
 class Server {
   private app: Express;
   private PORT: number = ENV.PORT;
@@ -49,6 +51,9 @@ class Server {
   routes() {
     const router = Router();
     this.app.use(this.ROUTE, router);
+
+    router.use("/patients", patientRouter);
+    router.use("/prescriptions", prescriptionRouter);
 
     this.app.use(
       /^\/(?!$).*$/,
