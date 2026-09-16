@@ -1,5 +1,6 @@
 import { RouterProvider } from "react-router/dom"
 import { ThemeProvider } from "@/components/theme-provider"
+import { GlobalAlertDialog } from "@/components/global-alert-dialog"
 import { GlobalDialog } from "@/components/global-dialog"
 import { GlobalDrawer } from "@/components/global-drawer"
 import { GlobalLoader } from "@/components/global-loader"
@@ -13,6 +14,7 @@ function App() {
       <QueryProvider>
         <RouterProvider router={router} />
         <Toaster />
+        <GlobalAlertDialog />
         <GlobalDialog />
         <GlobalDrawer />
         <GlobalLoader />
