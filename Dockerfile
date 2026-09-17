@@ -25,6 +25,9 @@ FROM dependencies AS builder
 
 COPY . .
 
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
 RUN DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder \
     pnpm --filter @optica/api exec prisma generate
 RUN pnpm --filter @optica/contracts build

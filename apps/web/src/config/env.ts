@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 const envSchema = z.object({
-  VITE_API_URL: z.string().trim().url().optional(),
+  VITE_API_URL: z.string().trim().url(),
 })
 
 const parsedEnv = envSchema.safeParse({
@@ -18,11 +18,11 @@ if (!parsedEnv.success) {
   )
 }
 
-const apiUrl = parsedEnv.data.VITE_API_URL?.replace(/\/$/, "")
+const apiUrl = parsedEnv.data.VITE_API_URL.replace(/\/$/, "")
 
 const ENV = {
   API_URL: apiUrl,
-  API_BASE_URL: apiUrl ? `${apiUrl}/api` : "/api",
+  API_BASE_URL: `${apiUrl}/api`,
   IS_DEV: import.meta.env.DEV,
   IS_PROD: import.meta.env.PROD,
 }

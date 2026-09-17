@@ -3,16 +3,14 @@ services:
     build:
       context: .
       target: frontend-production
+      args:
+        VITE_API_URL: ${VITE_API_URL:?VITE_API_URL is required}
     image: optica-manager-frontend:latest
     restart: unless-stopped
     ports:
-      - 4444:80
-    depends_on:
-      api:
-        condition: service_healthy
+      - "${FRONTEND_PUBLISHED_PORT:-4444}:80"
     networks:
       - public
-      - internal
 
   api:
     build:
@@ -22,8 +20,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env.production
-    expose:
-      - "3000"
+    ports:
+      - "${API_PUBLISHED_PORT:-3000}:3000"
     depends_on:
       migrate:
         condition: service_completed_successfully

@@ -29,6 +29,8 @@ class Server {
   middlewares() {
     if (ENV.NODE_ENV === "dev") {
       this.app.use(cors());
+    } else {
+      this.app.use(cors({ origin: ENV.CORS_ORIGIN }));
     }
 
     this.app.use((_req, res, next) => {
